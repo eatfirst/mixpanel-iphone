@@ -1,4 +1,4 @@
-#if ! __has_feature(objc_arc)
+#if !__has_feature(objc_arc)
 #error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag on this file.
 #endif
 
@@ -14,26 +14,28 @@
 
 #define MPNotifHeight 65.0f
 
-
-@interface CircleLayer : CALayer {}
+@interface CircleLayer : CALayer {
+}
 
 @property (nonatomic, assign) CGFloat circlePadding;
 
 @end
 
-@interface ElasticEaseOutAnimation : CAKeyframeAnimation {}
+@interface ElasticEaseOutAnimation : CAKeyframeAnimation {
+}
 
 - (id)initWithStartValue:(CGRect)start endValue:(CGRect)end andDuration:(double)duration;
 
 @end
 
-@interface GradientMaskLayer : CAGradientLayer {}
+@interface GradientMaskLayer : CAGradientLayer {
+}
 
 @end
 
 @interface MPAlphaMaskView : UIView {
 
-@protected
+  @protected
     CAGradientLayer *_maskLayer;
 }
 
@@ -53,8 +55,7 @@
 
 @implementation MPNotificationViewController
 
-- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion
-{
+- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion {
     return;
 }
 
@@ -76,6 +77,7 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageHeight;
 @property (nonatomic, strong) IBOutlet UIView *imageDragView;
 @property (nonatomic, strong) IBOutlet UIView *bgMask;
+@property (nonatomic, strong) IBOutlet UIView *centerView;
 
 @end
 
@@ -85,20 +87,14 @@
 
 @implementation MPTakeoverNotificationViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    self.backgroundImageView.image = self.backgroundImage;
 
     if (self.notification) {
         if (self.notification.image) {
             UIImage *image = [UIImage imageWithData:self.notification.image scale:2.0f];
             if (image) {
-                self.imageWidth.constant = image.size.width;
-                self.imageHeight.constant = image.size.height;
-                self.imageView.image = image;
-            } else {
-                MixpanelError(@"image failed to load from data: %@", self.notification.image);
+                self.backgroundImageView.image = image;
             }
         }
 
@@ -111,49 +107,43 @@
         }
     }
 
-    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.imageView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    self.imageView.layer.shadowOpacity = 1.0f;
-    self.imageView.layer.shadowRadius = 5.0f;
-    self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-
     [self.okayButton addTarget:self action:@selector(pressedOkay) forControlEvents:UIControlEventTouchUpInside];
     [self.closeButton addTarget:self action:@selector(pressedClose) forControlEvents:UIControlEventTouchUpInside];
 
-    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)];
-    [self.imageDragView addGestureRecognizer:gesture];
+    [self.okayButton.titleLabel setFont:[UIFont fontWithName:@"Ubuntu" size:16]];
+    [self.okayButton setClipsToBounds:YES];
+    [self.okayButton.layer setCornerRadius:2];
+    [self.okayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.okayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.okayButton.titleLabel setShadowOffset:CGSizeMake(0, 0)];
+    [self.okayButton.titleLabel setShadowColor:[UIColor clearColor]];
+
+    [self.okayButton setBackgroundColor:[UIColor colorWithRed:.04 green:.71 blue:.44 alpha:10.0]];
+    [self.okayButton setAdjustsImageWhenHighlighted:true];
+
+    [[self.centerView layer] setCornerRadius:12.0f];
+    [[self.centerView layer] setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5].CGColor];
 }
 
-- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion
-{
+- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion {
     [self.presentingViewController dismissViewControllerAnimated:animated completion:completion];
 }
 
-- (void)viewDidLayoutSubviews
-{
-    [self.okayButton sizeToFit];
-    [self.imageAlphaMaskView sizeToFit];
-}
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
+- (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 #endif
 
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     return UIStatusBarAnimationFade;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
-{
+- (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
-{
+- (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated {
     [super beginAppearanceTransition:isAppearing animated:animated];
 
     if (isAppearing) {
@@ -166,8 +156,7 @@
     }
 }
 
-- (void)endAppearanceTransition
-{
+- (void)endAppearanceTransition {
     [super endAppearanceTransition];
 
     NSTimeInterval duration = 0.20f;
@@ -197,24 +186,21 @@
     } completion:nil];
 }
 
-- (void)pressedOkay
-{
+- (void)pressedOkay {
     id strongDelegate = self.delegate;
     if (strongDelegate) {
         [strongDelegate notificationController:self wasDismissedWithStatus:YES];
     }
 }
 
-- (void)pressedClose
-{
+- (void)pressedClose {
     id strongDelegate = self.delegate;
     if (strongDelegate) {
         [strongDelegate notificationController:self wasDismissedWithStatus:NO];
     }
 }
 
-- (void)didPan:(UIPanGestureRecognizer *)gesture
-{
+- (void)didPan:(UIPanGestureRecognizer *)gesture {
     if (gesture.numberOfTouches == 1) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
             _viewStart = self.imageView.layer.position;
@@ -230,7 +216,7 @@
         CGPoint viewEnd = self.imageView.layer.position;
         CGPoint viewDistance = CGPointMake(viewEnd.x - _viewStart.x, viewEnd.y - _viewStart.y);
         CGFloat distance = (CGFloat)sqrt(viewDistance.x * viewDistance.x + viewDistance.y * viewDistance.y);
-        [UIView animateWithDuration:(distance / 500.0f) delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:(distance / 500.0f)delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.imageView.layer.position = self->_viewStart;
         } completion:nil];
     }
@@ -253,8 +239,7 @@
 
 @implementation MPMiniNotificationViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
     _canPan = YES;
@@ -270,13 +255,6 @@
     self.bodyLabel.font = [UIFont systemFontOfSize:14.0f];
     self.bodyLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.bodyLabel.numberOfLines = 0;
-
-    UIColor *backgroundColor = [UIColor mp_applicationPrimaryColor];
-    if (!backgroundColor) {
-        backgroundColor = [UIColor mp_darkEffectColor];
-    }
-    backgroundColor = [backgroundColor colorWithAlphaComponent:0.95f];
-    self.view.backgroundColor = backgroundColor;
 
     if (self.notification != nil) {
         if (self.notification.image != nil) {
@@ -312,8 +290,7 @@
     [self.view addGestureRecognizer:pan];
 }
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
     UIView *parentView = self.view.superview;
     CGRect parentFrame;
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
@@ -342,25 +319,25 @@
     // Position body label
     CGSize constraintSize = CGSizeMake(self.view.frame.size.width - MPNotifHeight - 12.5f, CGFLOAT_MAX);
     CGSize sizeToFit;
-    // Use boundingRectWithSize for iOS 7 and above, sizeWithFont otherwise.
+// Use boundingRectWithSize for iOS 7 and above, sizeWithFont otherwise.
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending) {
         sizeToFit = [self.bodyLabel.text boundingRectWithSize:constraintSize
-                                                  options:NSStringDrawingUsesLineFragmentOrigin
-                                               attributes:@{NSFontAttributeName: self.bodyLabel.font}
-                                                  context:nil].size;
+                                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                                   attributes:@{ NSFontAttributeName : self.bodyLabel.font }
+                                                      context:nil].size;
     } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
         sizeToFit = [self.bodyLabel.text sizeWithFont:self.bodyLabel.font
-                                constrainedToSize:constraintSize
-                                    lineBreakMode:self.bodyLabel.lineBreakMode];
+                                    constrainedToSize:constraintSize
+                                        lineBreakMode:self.bodyLabel.lineBreakMode];
 
 #pragma clang diagnostic pop
     }
 #else
-        sizeToFit = [self.bodyLabel.text sizeWithFont:self.bodyLabel.font
+    sizeToFit = [self.bodyLabel.text sizeWithFont:self.bodyLabel.font
                                 constrainedToSize:constraintSize
                                     lineBreakMode:self.bodyLabel.lineBreakMode];
 #endif
@@ -368,11 +345,10 @@
     self.bodyLabel.frame = CGRectMake(MPNotifHeight, (CGFloat)ceil((MPNotifHeight - sizeToFit.height) / 2.0f) - 2.0f, (CGFloat)ceil(sizeToFit.width), (CGFloat)ceil(sizeToFit.height));
 }
 
-- (UIView *)getTopView
-{
+- (UIView *)getTopView {
     UIView *topView = nil;
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    if(window) {
+    if (window) {
         for (UIView *subview in window.subviews) {
             if (!subview.hidden && subview.alpha > 0 && subview.frame.size.width > 0 && subview.frame.size.height > 0) {
                 topView = subview;
@@ -382,8 +358,7 @@
     return topView;
 }
 
-- (double)angleForInterfaceOrientation:(UIInterfaceOrientation)orientation
-{
+- (double)angleForInterfaceOrientation:(UIInterfaceOrientation)orientation {
     switch (orientation) {
         case UIInterfaceOrientationLandscapeLeft:
             return -M_PI_2;
@@ -396,8 +371,7 @@
     }
 }
 
-- (void)showWithAnimation
-{
+- (void)showWithAnimation {
     [self.view removeFromSuperview];
 
     UIView *topView = [self getTopView];
@@ -436,8 +410,7 @@
     }
 }
 
-- (void)animateImage
-{
+- (void)animateImage {
     CGSize imageViewSize = CGSizeMake(40.0f, 40.0f);
     CGFloat duration = 0.5f;
 
@@ -457,8 +430,7 @@
     [_imageView.layer addAnimation:imageAnimation forKey:@"bounds"];
 }
 
-- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion
-{
+- (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion {
     _canPan = NO;
 
     if (!_isBeingDismissed) {
@@ -500,16 +472,14 @@
     }
 }
 
-- (void)didTap:(UITapGestureRecognizer *)gesture
-{
+- (void)didTap:(UITapGestureRecognizer *)gesture {
     id strongDelegate = self.delegate;
     if (!_isBeingDismissed && gesture.state == UIGestureRecognizerStateEnded && strongDelegate != nil) {
         [strongDelegate notificationController:self wasDismissedWithStatus:YES];
     }
 }
 
-- (void)didPan:(UIPanGestureRecognizer *)gesture
-{
+- (void)didPan:(UIPanGestureRecognizer *)gesture {
     if (_canPan) {
         if (gesture.state == UIGestureRecognizerStateBegan && gesture.numberOfTouches == 1) {
             _panStartPoint = [gesture locationInView:self.parentViewController.view];
@@ -539,91 +509,17 @@
 
 @end
 
-@implementation MPAlphaMaskView
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    if(self = [super initWithCoder:aDecoder]) {
-        _maskLayer = [GradientMaskLayer layer];
-        [self.layer setMask:_maskLayer];
-        self.opaque = NO;
-        _maskLayer.opaque = NO;
-        [_maskLayer setNeedsDisplay];
-    }
-    return self;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [_maskLayer setFrame:self.bounds];
-}
-
-@end
-
 @implementation MPActionButton
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
+- (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
-        self.layer.backgroundColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:52.0f/255.0f alpha:1.0f].CGColor;
-        self.layer.cornerRadius = 17.0f;
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 2.0f;
     }
 
     return self;
 }
 
-- (void)setHighlighted:(BOOL)highlighted
-{
-    if (highlighted) {
-        self.layer.borderColor = [UIColor colorWithRed:26.0f/255.0f green:26.0f/255.0f blue:35.0f/255.0f alpha:1.0f].CGColor;
-        self.layer.borderColor = [UIColor grayColor].CGColor;
-    } else {
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-    }
-
+- (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-}
-
-@end
-
-@implementation MPBgRadialGradientView
-
-- (void)drawRect:(CGRect)rect
-{
-    CGPoint center = CGPointMake(160.0f, 200.0f);
-    CGSize circleSize = CGSizeMake(center.y * 2.0f, center.y * 2.0f);
-    CGRect circleFrame = CGRectMake(center.x - center.y, 0.0f, circleSize.width, circleSize.height);
-
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(ctx);
-
-    CGColorRef colorRef = [UIColor colorWithRed:24.0f / 255.0f green:24.0f / 255.0f blue:31.0f / 255.0f alpha:0.94f].CGColor;
-    CGContextSetFillColorWithColor(ctx, colorRef);
-    CGContextFillRect(ctx, self.bounds);
-
-    CGContextSetBlendMode(ctx, kCGBlendModeCopy);
-
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGFloat comps[] = {96.0f / 255.0f, 96.0f / 255.0f, 124.0f / 255.0f, 0.94f,
-        72.0f / 255.0f, 72.0f / 255.0f, 93.0f / 255.0f, 0.94f,
-        24.0f / 255.0f, 24.0f / 255.0f, 31.0f / 255.0f, 0.94f,
-        24.0f / 255.0f, 24.0f / 255.0f, 31.0f / 255.0f, 0.94f};
-    CGFloat locs[] = {0.0f, 0.1f, 0.75, 1.0f};
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, comps, locs, 4);
-
-    CGContextAddEllipseInRect(ctx, circleFrame);
-    CGContextClip(ctx);
-
-    CGContextDrawRadialGradient(ctx, gradient, center, 0.0f, center, circleSize.width / 2.0f, kCGGradientDrawsAfterEndLocation);
-
-
-    CGColorSpaceRelease(colorSpace);
-    CGGradientRelease(gradient);
-
-    CGContextRestoreGState(ctx);
 }
 
 @end
@@ -636,8 +532,7 @@
     return cl;
 }
 
-- (void)drawInContext:(CGContextRef)ctx
-{
+- (void)drawInContext:(CGContextRef)ctx {
     CGFloat edge = 1.5f; //the distance from the edge so we don't get clipped.
     CGContextSetAllowsAntialiasing(ctx, true);
     CGContextSetShouldAntialias(ctx, true);
@@ -657,51 +552,9 @@
 
 @end
 
-@implementation GradientMaskLayer
-
-- (void)drawInContext:(CGContextRef)ctx
-{
-
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-    CGFloat components[] = {
-        1.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.9f,
-        1.0f, 0.0f};
-
-    CGFloat locations[] = {0.0f, 0.7f, 0.8f, 1.0f};
-
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, components, locations, 7);
-    CGContextDrawLinearGradient(ctx, gradient, CGPointMake(0.0f, 0.0f), CGPointMake(5.0f, self.bounds.size.height), 0);
-
-
-    NSUInteger bits = (NSUInteger)fabs(self.bounds.size.width) * (NSUInteger)fabs(self.bounds.size.height);
-    char *rgba = (char *)malloc(bits);
-    srand(124);
-
-    for (NSUInteger i = 0; i < bits; ++i) {
-        rgba[i] = (rand() % 8);
-    }
-
-    CGContextRef noise = CGBitmapContextCreate(rgba, (NSUInteger)fabs(self.bounds.size.width), (NSUInteger)fabs(self.bounds.size.height), 8, (NSUInteger)fabs(self.bounds.size.width), NULL, (CGBitmapInfo)kCGImageAlphaOnly);
-    CGImageRef image = CGBitmapContextCreateImage(noise);
-
-    CGContextSetBlendMode(ctx, kCGBlendModeSourceOut);
-    CGContextDrawImage(ctx, self.bounds, image);
-
-    CGImageRelease(image);
-    CGColorSpaceRelease(colorSpace);
-    CGGradientRelease(gradient);
-    CGContextRelease(noise);
-    free(rgba);
-}
-
-@end
-
 @implementation ElasticEaseOutAnimation
 
-- (id)initWithStartValue:(CGRect)start endValue:(CGRect)end andDuration:(double)duration
-{
+- (id)initWithStartValue:(CGRect)start endValue:(CGRect)end andDuration:(double)duration {
     if ((self = [super init])) {
         self.duration = duration;
         self.values = [self generateValuesFrom:start to:end];
@@ -709,22 +562,21 @@
     return self;
 }
 
-- (NSArray *)generateValuesFrom:(CGRect)start to:(CGRect)end
-{
+- (NSArray *)generateValuesFrom:(CGRect)start to:(CGRect)end {
     NSUInteger steps = (NSUInteger)ceil(60 * self.duration) + 2;
-	NSMutableArray *valueArray = [NSMutableArray arrayWithCapacity:steps];
+    NSMutableArray *valueArray = [NSMutableArray arrayWithCapacity:steps];
     const double increment = 1.0 / (double)(steps - 1);
     double t = 0.0;
     CGRect range = CGRectMake(end.origin.x - start.origin.x, end.origin.y - start.origin.y, end.size.width - start.size.width, end.size.height - start.size.height);
 
     NSUInteger i;
     for (i = 0; i < steps; i++) {
-        float v = (float) -(pow(M_E, -8*t) * cos(12*t)) + 1; // Cosine wave with exponential decay
+        float v = (float)-(pow(M_E, -8 * t) * cos(12 * t)) + 1; // Cosine wave with exponential decay
 
         CGRect value = CGRectMake(start.origin.x + v * range.origin.x,
                                   start.origin.y + v * range.origin.y,
                                   start.size.width + v * range.size.width,
-                                  start.size.height + v *range.size.height);
+                                  start.size.height + v * range.size.height);
 
         [valueArray addObject:[NSValue valueWithCGRect:value]];
         t += increment;

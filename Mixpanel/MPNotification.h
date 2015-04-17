@@ -1,5 +1,13 @@
 #import <Foundation/Foundation.h>
 
+typedef enum : NSUInteger {
+    MPNotificationTypeFullScreen = 1,
+    MPNotificationTypeBrandedDialog,
+    MPNotificationTypeSystemDialog,
+    MPNotificationTypeRequired,
+    MPNotificationTypeNotDefined
+} MPNotificationType;
+
 @interface MPNotification : NSObject
 
 extern NSString *const MPNotificationTypeMini;
@@ -14,6 +22,7 @@ extern NSString *const MPNotificationTypeTakeover;
 @property (nonatomic, strong) NSString *body;
 @property (nonatomic, strong) NSString *callToAction;
 @property (nonatomic, strong) NSURL *callToActionURL;
+@property (nonatomic, assign) MPNotificationType notificationType;
 
 + (MPNotification *)notificationWithJSONObject:(NSDictionary *)object;
 

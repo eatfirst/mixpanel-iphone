@@ -1,4 +1,4 @@
-#if ! __has_feature(objc_arc)
+#if !__has_feature(objc_arc)
 #error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag on this file.
 #endif
 
@@ -16,8 +16,7 @@
 NSString *const MPNotificationTypeMini = @"mini";
 NSString *const MPNotificationTypeTakeover = @"takeover";
 
-+ (MPNotification *)notificationWithJSONObject:(NSDictionary *)object
-{
++ (MPNotification *)notificationWithJSONObject:(NSDictionary *)object {
     if (object == nil) {
         MixpanelError(@"notif json object should not be nil");
         return nil;
@@ -113,16 +112,38 @@ NSString *const MPNotificationTypeTakeover = @"takeover";
 
     return [[MPNotification alloc] initWithID:[ID unsignedIntegerValue]
                                     messageID:[messageID unsignedIntegerValue]
-                                          type:type
-                                         title:title
-                                          body:body
-                                           callToAction:callToAction
-                                           callToActionURL:callToActionURL
-                                      imageURL:imageURL];
+                                         type:type
+                                        title:title
+                                         body:body
+                                 callToAction:callToAction
+                              callToActionURL:callToActionURL
+                                     imageURL:imageURL];
 }
 
-- (id)initWithID:(NSUInteger)ID messageID:(NSUInteger)messageID type:(NSString *)type title:(NSString *)title body:(NSString *)body callToAction:(NSString *)callToAction callToActionURL:(NSURL *)callToActionURL imageURL:(NSURL *)imageURL
-{
+- (void)setupNotificationType {
+    if (self.title.length >= 3) {
+        NSString *notificationType = [[self.title substringWithRange:NSMakeRange(0, 3)] uppercaseString];
+        if ([notificationType isEqualToString:@"[F]"]) {
+            self.title = [self.title substringFromIndex:3];
+            self.notificationType = MPNotificationTypeFullScreen;
+        } else if ([notificationType isEqualToString:@"[B]"]) {
+            self.title = [self.title substringFromIndex:3];
+            self.notificationType = MPNotificationTypeBrandedDialog;
+        } else if ([notificationType isEqualToString:@"[N]"]) {
+            self.title = [self.title substringFromIndex:3];
+            self.notificationType = MPNotificationTypeSystemDialog;
+        } else if ([notificationType isEqualToString:@"[R]"]) {
+            self.title = [self.title substringFromIndex:3];
+            self.notificationType = MPNotificationTypeRequired;
+        } else {
+            self.notificationType = MPNotificationTypeNotDefined;
+        }
+    } else {
+        self.notificationType = MPNotificationTypeNotDefined;
+    }
+}
+
+- (id)initWithID:(NSUInteger)ID messageID:(NSUInteger)messageID type:(NSString *)type title:(NSString *)title body:(NSString *)body callToAction:(NSString *)callToAction callToActionURL:(NSURL *)callToActionURL imageURL:(NSURL *)imageURL {
     if (self = [super init]) {
         BOOL valid = YES;
 
@@ -151,6 +172,7 @@ NSString *const MPNotificationTypeTakeover = @"takeover";
             self.callToAction = callToAction;
             self.callToActionURL = callToActionURL;
             self.image = nil;
+            [self setupNotificationType];
         } else {
             self = nil;
         }
@@ -159,8 +181,7 @@ NSString *const MPNotificationTypeTakeover = @"takeover";
     return self;
 }
 
-- (NSData *)image
-{
+- (NSData *)image {
     if (_image == nil && _imageURL != nil) {
         NSError *error = nil;
         NSData *imageData = [NSData dataWithContentsOfURL:_imageURL options:NSDataReadingMappedIfSafe error:&error];

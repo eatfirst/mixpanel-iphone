@@ -2,7 +2,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class    MixpanelPeople;
+@class MixpanelPeople;
+@class MPNotificationViewController;
+@class MPNotification;
 @protocol MixpanelDelegate;
 
 /*!
@@ -373,7 +375,6 @@
  */
 - (void)track:(NSString *)event properties:(NSDictionary *)properties;
 
-
 /*!
  @method
 
@@ -389,7 +390,6 @@
  @param userInfo         remote notification payload dictionary
  */
 - (void)trackPushNotification:(NSDictionary *)userInfo;
-
 
 /*!
  @method
@@ -583,7 +583,6 @@
  */
 - (void)showSurvey;
 
-
 /*!
  @method
 
@@ -594,7 +593,6 @@
  You do not need to call this method on the main thread.
  */
 - (void)showNotificationWithID:(NSUInteger)ID;
-
 
 /*!
  @method
@@ -645,10 +643,9 @@
  Same as joinExperiments but will fire the given callback after all experiments
  have been loaded and applied.
  */
-- (void)joinExperimentsWithCallback:(void(^)())experimentsLoadedCallback;
+- (void)joinExperimentsWithCallback:(void (^)())experimentsLoadedCallback;
 
 - (void)createAlias:(NSString *)alias forDistinctID:(NSString *)distinctID;
-
 
 - (NSString *)libVersion;
 
@@ -822,7 +819,7 @@
 
  @param properties      mapping of list property names to lists to union
  */
-- (void)union:(NSDictionary *)properties;
+- (void) union:(NSDictionary *)properties;
 
 /*!
  @method
@@ -848,6 +845,7 @@
  */
 - (void)trackCharge:(NSNumber *)amount withProperties:(NSDictionary *)properties;
 
+- (void)trackNotification:(MPNotification *)notification event:(NSString *)event;
 
 /*!
  @method

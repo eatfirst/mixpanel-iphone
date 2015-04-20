@@ -7,7 +7,6 @@
     <customFonts key="customFonts">
         <mutableArray key="Ubuntu-R.ttf">
             <string>Ubuntu</string>
-            <string>Ubuntu</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -33,10 +32,10 @@
                                         <rect key="frame" x="0.0" y="1" width="320" height="567"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aRB-Kc-wGE">
-                                                <rect key="frame" x="16" y="127" width="288" height="106"/>
+                                                <rect key="frame" x="16" y="127" width="288" height="121"/>
                                                 <subviews>
                                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notification body" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="260" translatesAutoresizingMaskIntoConstraints="NO" id="MmD-8U-og7">
-                                                        <rect key="frame" x="14" y="65" width="260" height="21"/>
+                                                        <rect key="frame" x="14" y="75" width="260" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="ZYa-hN-tA1"/>
                                                         </constraints>
@@ -50,16 +49,17 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="Xeh-fB-Ejl"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Ubuntu" family="Ubuntu" pointSize="25"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="25"/>
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                         <size key="shadowOffset" width="0.0" height="0.0"/>
                                                     </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstItem="MmD-8U-og7" firstAttribute="top" secondItem="eF7-ct-CP3" secondAttribute="bottom" constant="15" id="5pS-Uf-WVa"/>
+                                                    <constraint firstItem="MmD-8U-og7" firstAttribute="top" secondItem="eF7-ct-CP3" secondAttribute="bottom" constant="25" id="5pS-Uf-WVa"/>
                                                     <constraint firstItem="eF7-ct-CP3" firstAttribute="top" secondItem="aRB-Kc-wGE" secondAttribute="top" constant="20" id="M5A-oq-4HE"/>
-                                                    <constraint firstAttribute="bottom" secondItem="MmD-8U-og7" secondAttribute="bottom" constant="20" id="cdu-xG-raU"/>
+                                                    <constraint firstAttribute="bottom" secondItem="MmD-8U-og7" secondAttribute="bottom" constant="25" id="cdu-xG-raU"/>
                                                     <constraint firstAttribute="trailing" secondItem="eF7-ct-CP3" secondAttribute="trailing" constant="14" id="k6l-cs-SAI"/>
                                                     <constraint firstItem="eF7-ct-CP3" firstAttribute="leading" secondItem="aRB-Kc-wGE" secondAttribute="leading" constant="14" id="ncj-Jt-Wez"/>
                                                     <constraint firstItem="MmD-8U-og7" firstAttribute="leading" secondItem="aRB-Kc-wGE" secondAttribute="leading" constant="14" id="pAf-AC-ig3"/>
@@ -67,7 +67,7 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LDp-cp-cpg" customClass="MPActionButton">
-                                                <rect key="frame" x="16" y="259" width="288" height="41"/>
+                                                <rect key="frame" x="16" y="288" width="288" height="41"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="41" id="aDd-28-dZw"/>
@@ -87,7 +87,7 @@
                                             <constraint firstAttribute="trailing" secondItem="LDp-cp-cpg" secondAttribute="trailing" constant="16" id="9eZ-jH-CfE"/>
                                             <constraint firstItem="aRB-Kc-wGE" firstAttribute="leading" secondItem="NtW-qx-qOt" secondAttribute="leading" constant="16" id="AQa-OX-L6a"/>
                                             <constraint firstAttribute="trailing" secondItem="aRB-Kc-wGE" secondAttribute="trailing" constant="16" id="JeP-1R-jlo"/>
-                                            <constraint firstItem="LDp-cp-cpg" firstAttribute="top" secondItem="aRB-Kc-wGE" secondAttribute="bottom" constant="26" id="aXP-sr-7EI"/>
+                                            <constraint firstItem="LDp-cp-cpg" firstAttribute="top" secondItem="aRB-Kc-wGE" secondAttribute="bottom" constant="40" id="aXP-sr-7EI"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="LDp-cp-cpg" secondAttribute="bottom" constant="10" id="cls-AP-eiz"/>
                                             <constraint firstItem="aRB-Kc-wGE" firstAttribute="top" secondItem="NtW-qx-qOt" secondAttribute="top" constant="127" id="cms-Vz-Ng5"/>
                                             <constraint firstItem="LDp-cp-cpg" firstAttribute="leading" secondItem="NtW-qx-qOt" secondAttribute="leading" constant="16" id="hpR-W9-NFj"/>

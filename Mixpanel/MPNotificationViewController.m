@@ -111,6 +111,10 @@
     [self.closeButton addTarget:self action:@selector(pressedClose) forControlEvents:UIControlEventTouchUpInside];
 
     [self.okayButton.titleLabel setFont:[UIFont fontWithName:@"Ubuntu" size:16]];
+    [self.titleView setFont:[UIFont fontWithName:@"CaeciliaLTStd-45Light" size:26]];
+    [self.titleView setTextColor:[UIColor colorWithRed:0.38 green:0.46 blue:0.43 alpha:1]];
+    [self.bodyView setTextColor:[UIColor colorWithRed:0.38 green:0.46 blue:0.43 alpha:1]];
+
     [self.okayButton setClipsToBounds:YES];
     [self.okayButton.layer setCornerRadius:2];
     [self.okayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -122,7 +126,7 @@
     [self.okayButton setAdjustsImageWhenHighlighted:true];
 
     [[self.centerView layer] setCornerRadius:12.0f];
-    [[self.centerView layer] setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5].CGColor];
+    [[self.centerView layer] setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.7].CGColor];
 }
 
 - (void)hideWithAnimation:(BOOL)animated completion:(void (^)(void))completion {

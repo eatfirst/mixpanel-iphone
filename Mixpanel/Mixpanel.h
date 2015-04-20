@@ -649,6 +649,7 @@
 
 - (NSString *)libVersion;
 
+- (void)trackNotification:(MPNotification *)notification event:(NSString *)event;
 @end
 
 /*!
@@ -844,8 +845,6 @@
  revenue analytics to see which products are generating the most revenue.
  */
 - (void)trackCharge:(NSNumber *)amount withProperties:(NSDictionary *)properties;
-
-- (void)trackNotification:(MPNotification *)notification event:(NSString *)event;
 
 /*!
  @method
